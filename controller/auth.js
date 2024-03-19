@@ -129,6 +129,7 @@ const memberLogin = async (req, res) => {
 }
 
 const validateMember = async (req, res) => {
+    //check
     const { token } = req.body;
     try {
         const member = jwt.verify(token, process.env.SECRET_KEY);
