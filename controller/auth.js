@@ -1,5 +1,5 @@
 const Member = require("../models/MemberSchema");
-const User = require("../models/userSchema");
+const User = require("../models/UserSchema");
 const generator = require('generate-password');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
