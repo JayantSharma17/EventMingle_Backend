@@ -3,6 +3,7 @@ const User = require("../models/UserSchema");
 const generator = require('generate-password');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const validator = require("email-validator");
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
@@ -63,6 +64,9 @@ const registerMember = async (req, res) => {
 const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
+        if(!validator.validate("test@email.com")) {
+            res.status(401).json({ message: "Invalid email." });
+        }
         const emailExist = await User.findOne({ email: email });
         if (emailExist) {
             const isMatch = await bcrypt.compare(password, emailExist.password);
