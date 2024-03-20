@@ -112,7 +112,7 @@ const memberLogin = async (req, res) => {
                 console.log(emailExist)
                 const token = await emailExist.generateAuthToken();
                 console.log(`Token: ${token}`);
-                res.status(200).send({ message: "Member Login successfully", response: emailExist, token: token });
+                res.status(200).json({ message: "Member Login successfully", response: emailExist, token: token });
             }
             else {
                 res.status(400).json({ message: "Invalid Credentials p" });
