@@ -1,5 +1,5 @@
 const Event = require("../models/EventSchema");
-const User = require("../models/userSchema");
+const User = require("../models/UserSchema");
 
 const createEvent = async (req, res) => {
     const userId = req.params.userId;
