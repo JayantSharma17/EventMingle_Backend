@@ -64,7 +64,7 @@ const registerMember = async (req, res) => {
 const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
-        if(!validator.validate("test@email.com")) {
+        if(!validator.validate(email)) {
             res.status(401).json({ message: "Invalid email." });
         }
         const emailExist = await User.findOne({ email: email });
