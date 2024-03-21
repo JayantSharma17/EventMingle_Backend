@@ -10,7 +10,7 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        unique: true
+        // unique: true
     },
     location: {
         type: String,
@@ -19,6 +19,7 @@ const eventSchema = new mongoose.Schema({
     },
     desc: {
         type: String,
+        default:''
     },
     date: {
         type: String,
