@@ -8,6 +8,9 @@ const createEvent = async (req, res) => {
     try {
 
         let userData = await User.findById(userId);
+        if (!userData) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
 
         // Check if the event already exists for the user
         const eventExist = await Event.findOne({ name: name, userId: userId });
