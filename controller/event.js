@@ -1,4 +1,4 @@
-const Event = require("../models/EventSchema");
+// const Event = require("../models/EventSchema");
 const User = require("../models/UserSchema");
 
 const createEvent = async (req, res) => {
