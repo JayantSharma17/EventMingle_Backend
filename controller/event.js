@@ -29,7 +29,7 @@ const createEvent = async (req, res) => {
     }
 }
 
-const ongoingEvent=async(req,res)=>{
+const ongoingEvent = async (req, res) => {
     const userId = req.params.userId;
     try {
         const user = await User.findById(userId);
@@ -42,14 +42,34 @@ const ongoingEvent=async(req,res)=>{
 
         const events = await Event.find({
             _id: { $in: user.events },
-            date: { $gte: today.toISOString().slice(0, 10) } // Convert today's date to string for comparison
-        });
+            date: { $gte: today.toISOString() }// Convert today's date to string for comparison
+        }).sort({ date: 1 });
         res.status(200).json(events);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: e, message: 'Unable to fetch ongoing Events.' });
     }
-
-
 }
-module.exports = { createEvent,ongoingEvent }
+const completedEvent = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        // Get today's date
+        const today = new Date();
+        today.setUTCHours(0, 0, 0, 0); // Set time to beginning of the day in UTC
+
+        const events = await Event.find({
+            _id: { $in: user.events },
+            date: { $lt: today.toISOString() }// Convert today's date to string for comparison
+        }).sort({ date: 1 });
+        res.status(200).json(events);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: e, message: 'Unable to fetch ongoing Events.' });
+    }
+}
+
+module.exports = { createEvent, ongoingEvent, completedEvent }
