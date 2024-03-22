@@ -42,7 +42,7 @@ const ongoingEvent=async(req,res)=>{
 
         const events = await Event.find({
             _id: { $in: user.events },
-            date: { $lte: today.toISOString().slice(0, 10) } // Convert today's date to string for comparison
+            date: { $gte: today.toISOString().slice(0, 10) } // Convert today's date to string for comparison
         });
         res.status(200).json(events);
     } catch (error) {
