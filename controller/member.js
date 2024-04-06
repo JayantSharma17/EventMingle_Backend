@@ -5,15 +5,15 @@ const membersName = async (req, res) => {
         const userId = req.params.userId;
         const user = await User.findById(userId).populate({
             path: 'members',
-            select: 'name _id'
-        });
+            select: 'name _id' // Projection to get only name and _id
+        });;
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         res.status(200).json(user.members);
     }
-    catch (error) {
-        console.error(error);
+    catch (e) {
+        console.error(e);
         res.status(500).json({ error: e, message: 'Unable to fetch members name.' });
     }
 

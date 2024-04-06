@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     },
     members: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Review"
+        ref: "Member"
     }],
     events: [{
         type: mongoose.Schema.Types.ObjectId,
