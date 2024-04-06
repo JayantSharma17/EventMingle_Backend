@@ -23,6 +23,11 @@ const memberSchema = new mongoose.Schema({
         trim: true,
         required: true,
     },
+    position: {
+        type: String,
+        trim: true,
+        required: true,
+    },
     password: {
         type: String,
         required: [true, "User must have a password"]

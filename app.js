@@ -9,6 +9,7 @@ const app = express();
 
 const authRouter = require('./router/auth');
 const eventRouter = require('./router/event');
+const memberRouter = require('./controller/member')
 
 
 const PORT = process.env.PORT;
@@ -17,6 +18,7 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(authRouter);
 app.use(eventRouter);
+app.use(memberRouter);
 
 app.get('/', (req, res) => {
     res.send('Welcome to EventMingle Backend')

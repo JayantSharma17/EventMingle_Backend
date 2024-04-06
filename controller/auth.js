@@ -30,12 +30,12 @@ const register = async (req, res) => {
 const registerMember = async (req, res) => {
     const userId = req.params.userId;
 
-    const { name, email, phone } = req.body;
+    const { name, email, phone, position } = req.body;
     const password = generator.generate({
         length: 5,
         numbers: true
     });
-    if (!name || !email || !password || !phone) {
+    if (!name || !email || !password || !phone || !position) {
         return res.status(422).send('All fields are required.')
     }
     try {
@@ -144,4 +144,4 @@ const validateMember = async (req, res) => {
     }
 }
 
-module.exports = { register, registerMember, userLogin, validateUser, memberLogin ,validateMember}
+module.exports = { register, registerMember, userLogin, validateUser, memberLogin, validateMember }
