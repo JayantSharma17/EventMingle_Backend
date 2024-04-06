@@ -44,7 +44,7 @@ const registerMember = async (req, res) => {
             return res.status(422).json({ message: 'email already exist of this member.' });
         }
         let userData = await User.findById(userId);
-        let memberData = await new Member({ userId, name, email, phone, password });
+        let memberData = await new Member({ userId, name, email, phone, position, password });
         userData.members.push(memberData);
 
         //middleware password hashing working here from userSchema
