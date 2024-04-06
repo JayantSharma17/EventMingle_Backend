@@ -6,7 +6,7 @@ const membersName = async (req, res) => {
         const user = await User.findById(userId).populate({
             path: 'members',
             select: 'name _id' // Projection to get only name and _id
-        });;
+        }).sort({ 'members.name': 1 });;
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
