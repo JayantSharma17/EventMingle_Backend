@@ -14,7 +14,6 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-
     },
     postDate: {
         type: Date,
@@ -22,7 +21,8 @@ const taskSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["completed", "active","assigned"],
+        default: "active",
+        enum: ["completed", "active"],
         required: [true, "task must have a status"]
     },
 })
