@@ -4,14 +4,14 @@ const Task = require("../models/Task");
 const createTask = async (req, res) => {
     const eventId = req.params.eventId;
 
-    const { name, memberId, dueDate } = req.body;
+    const { name, memberId, dueDate, desc } = req.body;
     try {
         let eventData = await Event.findById(eventId);
         if (!eventData) {
             return res.status(404).json({ message: 'Event not found.' });
         }
 
-        let taskData = await new Task({ name, memberId, dueDate });
+        let taskData = await new Task({ name, memberId, dueDate, desc });
         eventData.tasks.push(taskData);
         await eventData.save();
         await taskData.save();

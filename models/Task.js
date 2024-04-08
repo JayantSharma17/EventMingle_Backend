@@ -25,6 +25,10 @@ const taskSchema = new mongoose.Schema({
         enum: ["completed", "active"],
         required: [true, "task must have a status"]
     },
+    desc: {
+        type: String,
+        trim: true,
+    }
 })
 
 const Task = mongoose.model('Task', taskSchema);
