@@ -5,7 +5,7 @@ const membersName = async (req, res) => {
         const userId = req.params.userId;
         const user = await User.findById(userId).populate({
             path: 'members',
-            select: 'name _id',
+            // select: 'name _id',
             options: { sort: { 'name': 1 }} 
         });
         if (!user) {
