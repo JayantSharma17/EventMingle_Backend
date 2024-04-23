@@ -1,4 +1,5 @@
 const Event = require("../models/Event");
+const Member = require("../models/Member");
 const Task = require("../models/Task");
 
 const createTask = async (req, res) => {
@@ -43,5 +44,20 @@ const tasksInfo = async (req, res) => {
         res.status(500).json({ error: e, message: 'Unable to fetch Task info.' });
     }
 }
+const membersTask = async (req, res) => {
+    try {
+        const memberId = req.params.memberId;
+        let memberData = await Member.findById(memberId);
+        if (!memberData) {
+            return res.status(404).json({ message: 'Member not found.' });
+        }
+        const tasks = await Task.find({ memberId: memberId });
+        res.status(200).json(tasks);
+    }
+    catch (e) {
+        console.error(e);
+        res.status(500).json({ error: e, message: 'Unable to fetch Tasks for this particular member.' });
+    }
+}
 
-module.exports = { createTask, tasksInfo }
+module.exports = { createTask, tasksInfo, membersTask }
