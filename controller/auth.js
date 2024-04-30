@@ -60,6 +60,49 @@ const registerMember = async (req, res) => {
     }
 }
 
+const registerCSVMember = async (req, res) => {
+    const userId = req.params.userId;
+    const { data } = req.body; 
+
+    const responses = [];
+
+    for (let i = 1; i < data.length; i++) {
+        const { name, email, phone, position } = data[i];
+        const password = generator.generate({
+            length: 5,
+            numbers: true
+        });
+
+        if (!name || !email || !password || !phone || !position) {
+            responses.push({ error: 'All fields are required.' });
+            continue; 
+        }
+
+        try {
+            const memberExist = await Member.findOne({ email: email });
+            if (memberExist) {
+                responses.push({ message: `Email already exists for ${email}.`, email });
+                continue;
+            }
+
+            let userData = await User.findById(userId);
+            let memberData = await new Member({ userId, name, email, phone, position, password });
+            userData.members.push(memberData);
+
+            await memberData.save();
+            await userData.save();
+            console.log(`Password for member: ${password}`);
+            console.log(memberData);
+            responses.push({ message: `Member signup successful for ${email}.`, email, password });
+        } catch (e) {
+            console.log(e);
+            responses.push({ error: e, message: `Member signup unsuccessful for ${email}.` });
+        }
+    }
+
+    return res.status(201).json({ responses });
+}
+
 const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -144,4 +187,4 @@ const validateMember = async (req, res) => {
     }
 }
 
-module.exports = { register, registerMember, userLogin, validateUser, memberLogin, validateMember }
+module.exports = { register, registerMember, userLogin, validateUser, memberLogin, validateMember, registerCSVMember }
