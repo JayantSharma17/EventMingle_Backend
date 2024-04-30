@@ -62,7 +62,7 @@ const registerMember = async (req, res) => {
 
 const registerCSVMember = async (req, res) => {
     const userId = req.params.userId;
-    const { data } = req.body; 
+    const data = req.body;
 
     const responses = [];
 
