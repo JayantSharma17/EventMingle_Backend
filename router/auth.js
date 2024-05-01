@@ -9,5 +9,5 @@ router.post('/login-user', userLogin);
 router.post('/validate-user', validateUser);
 router.post('/login-member', memberLogin);
 router.post('/validate-member', validateMember);
-// kkjhkj
+
 module.exports = router;
