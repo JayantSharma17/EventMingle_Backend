@@ -2,7 +2,7 @@ const Event = require("../models/Event");
 const User = require("../models/User");
 const admin = require('firebase-admin');
 
-// Initialize Firebase Admin SDK
+// Initialize Firebase Admin SDK k
 // const serviceAccount = require('../notifyem-15faf-firebase-adminsdk-eisda-ca8e0b518f.json');
 const Notification = require("../models/Notification");
 const serviceAccount = {
