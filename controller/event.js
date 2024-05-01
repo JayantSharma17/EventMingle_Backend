@@ -1,5 +1,13 @@
 const Event = require("../models/Event");
 const User = require("../models/User");
+const admin = require('firebase-admin');
+
+// Initialize Firebase Admin SDK
+// const serviceAccount = require('../notifyem-15faf-firebase-adminsdk-eisda-ca8e0b518f.json');
+// const Notification = require("../models/Notification");
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+// });
 
 const createEvent = async (req, res) => {
     const userId = req.params.userId;
@@ -17,10 +25,34 @@ const createEvent = async (req, res) => {
             return res.status(422).json({ message: 'Event already exists for this user.' });
         }
         let eventData = await new Event({ userId, name, location, date, startTime, endTime });
+        let notificationData = await new Notification({userId:userId,title:"New Event added",desc:`${name} Event added in your group.`})
         userData.events.push(eventData);
+        userData.notifications.push(notificationData)
         await eventData.save();
+        await notificationData.save();
         await userData.save();
         console.log(eventData);
+
+        const fcmTokens = ["chvwUOhKRJWlLXbXZ3mfat:APA91bEh4wWLjIRFgCfzJwtnbNV7BtSVG7xYJGuZQy_KtOU5PCDt2EqRY154AV9l7eJIAh5aNDnQonMy4TkdYODjgYD0Pf8fdopVAYON-8jgZORcG1o169_x8Jf9QFpT0kurWFL7nutL"];
+
+        // Send the notification to the specified devices using FCM tokens
+        // const message = {
+        //     notification: {
+        //         title: "New Event added",
+        //         body: `${name} Event added in your group.`,
+        //     },
+        //     tokens: fcmTokens,
+        // };
+
+        // admin.messaging().sendEachForMulticast(message)
+        //     .then((response) => {
+        //         console.log('Successfully sent message:', response);
+        //     })
+        //     .catch((error) => {
+        //         console.error('Error sending message:', error);
+        //     });
+
+
         return res.status(201).json({ message: "Event created successfully." })
     }
     catch (e) {
@@ -71,5 +103,22 @@ const completedEvent = async (req, res) => {
         res.status(500).json({ error: e, message: 'Unable to fetch ongoing Events.' });
     }
 }
+const getNotifications=async(req,res) =>{
+    const userId = req.params.userId;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
-module.exports = { createEvent, ongoingEvent, completedEvent }
+        const notificationsData = await Notification.find({
+            _id: { $in: user.notifications },
+        }).sort({ date: 1 });
+        res.status(200).json(notificationsData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: e, message: 'Unable to fetch notifications.' });
+    }
+}
+
+module.exports = { createEvent, ongoingEvent, completedEvent ,getNotifications}
