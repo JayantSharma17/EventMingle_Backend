@@ -4,10 +4,23 @@ const admin = require('firebase-admin');
 
 // Initialize Firebase Admin SDK
 // const serviceAccount = require('../notifyem-15faf-firebase-adminsdk-eisda-ca8e0b518f.json');
-// const Notification = require("../models/Notification");
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-// });
+const Notification = require("../models/Notification");
+const serviceAccount = {
+    "type": "service_account",
+    "project_id": "notifyem-15faf",
+    "private_key_id": "ca8e0b518fda83a49a7ca6ca49795999ba549d16",
+    "private_key": `${process.env.PRIVATE_KEY_FCM}`,
+    "client_email": "firebase-adminsdk-eisda@notifyem-15faf.iam.gserviceaccount.com",
+    "client_id": "107987603323155463548",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-eisda%40notifyem-15faf.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+}
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
 
 const createEvent = async (req, res) => {
     const userId = req.params.userId;
@@ -25,7 +38,7 @@ const createEvent = async (req, res) => {
             return res.status(422).json({ message: 'Event already exists for this user.' });
         }
         let eventData = await new Event({ userId, name, location, date, startTime, endTime });
-        let notificationData = await new Notification({userId:userId,title:"New Event added",desc:`${name} Event added in your group.`})
+        let notificationData = await new Notification({ userId: userId, title: "New Event added", desc: `${name} Event added in your group.` })
         userData.events.push(eventData);
         userData.notifications.push(notificationData)
         await eventData.save();
@@ -33,24 +46,24 @@ const createEvent = async (req, res) => {
         await userData.save();
         console.log(eventData);
 
-        const fcmTokens = ["chvwUOhKRJWlLXbXZ3mfat:APA91bEh4wWLjIRFgCfzJwtnbNV7BtSVG7xYJGuZQy_KtOU5PCDt2EqRY154AV9l7eJIAh5aNDnQonMy4TkdYODjgYD0Pf8fdopVAYON-8jgZORcG1o169_x8Jf9QFpT0kurWFL7nutL"];
+        const fcmTokens = ["euoHzJ3UTpKH41MhBpB7U-:APA91bEYJaq0KvE5FQoEshpetJlmXbQKoW9HMiCREBZAx7LhgK9VQsTfKSybC4Vx9i02WjihIfnXqQMJ4biv22zTf_j4-0NOKLtYdbDmnW1tPaXgmHcuBw6oja6nfm7HfFwofspkTpy7","chvwUOhKRJWlLXbXZ3mfat:APA91bEh4wWLjIRFgCfzJwtnbNV7BtSVG7xYJGuZQy_KtOU5PCDt2EqRY154AV9l7eJIAh5aNDnQonMy4TkdYODjgYD0Pf8fdopVAYON-8jgZORcG1o169_x8Jf9QFpT0kurWFL7nutL"];
 
         // Send the notification to the specified devices using FCM tokens
-        // const message = {
-        //     notification: {
-        //         title: "New Event added",
-        //         body: `${name} Event added in your group.`,
-        //     },
-        //     tokens: fcmTokens,
-        // };
+        const message = {
+            notification: {
+                title: "New Event added",
+                body: `${name} Event added in your group.`,
+            },
+            tokens: fcmTokens,
+        };
 
-        // admin.messaging().sendEachForMulticast(message)
-        //     .then((response) => {
-        //         console.log('Successfully sent message:', response);
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error sending message:', error);
-        //     });
+        admin.messaging().sendEachForMulticast(message)
+            .then((response) => {
+                console.log('Successfully sent message:', response);
+            })
+            .catch((error) => {
+                console.error('Error sending message:', error);
+            });
 
 
         return res.status(201).json({ message: "Event created successfully." })
@@ -103,7 +116,7 @@ const completedEvent = async (req, res) => {
         res.status(500).json({ error: e, message: 'Unable to fetch ongoing Events.' });
     }
 }
-const getNotifications=async(req,res) =>{
+const getNotifications = async (req, res) => {
     const userId = req.params.userId;
     try {
         const user = await User.findById(userId);
@@ -121,4 +134,4 @@ const getNotifications=async(req,res) =>{
     }
 }
 
-module.exports = { createEvent, ongoingEvent, completedEvent ,getNotifications}
+module.exports = { createEvent, ongoingEvent, completedEvent, getNotifications }
