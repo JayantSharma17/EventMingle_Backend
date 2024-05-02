@@ -5,19 +5,8 @@ const admin = require('firebase-admin');
 // Initialize Firebase Admin SDK k
 // const serviceAccount = require('../notifyem-15faf-firebase-adminsdk-eisda-ca8e0b518f.json');
 const Notification = require("../models/Notification");
-const serviceAccount = {
-    "type": "service_account",
-    "project_id": "notifyem-15faf",
-    "private_key_id": "ca8e0b518fda83a49a7ca6ca49795999ba549d16",
-    "private_key": `${process.env.PRIVATE_KEY_FCM}`,
-    "client_email": "firebase-adminsdk-eisda@notifyem-15faf.iam.gserviceaccount.com",
-    "client_id": "107987603323155463548",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-eisda%40notifyem-15faf.iam.gserviceaccount.com",
-    "universe_domain": "googleapis.com"
-  }
+const googleApplicationCredentials = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const serviceAccount = require(googleApplicationCredentials)
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
